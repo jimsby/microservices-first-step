@@ -1,0 +1,23 @@
+#Application properties
+server:
+  port: 8081
+  error:
+    include-message: always
+    include-binding-errors: always
+
+#AWS properties
+cloud:
+  aws:
+    region:
+      static: ap-south-1
+    stack:
+      auto: false
+    credentials:
+      accessKey: AKIAIOSFODNN7EXAMPLE
+      secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    endpoint:
+      uri: http://localhost:9444/s3
+
+application:
+  bucket:
+    name: testmp3bucket
