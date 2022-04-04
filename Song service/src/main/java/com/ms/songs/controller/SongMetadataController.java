@@ -56,7 +56,7 @@ public class SongMetadataController {
             try {
                 String deleteResult = songMetadataService.delete(id);
                 log.info(deleteResult + " (id: " + id + ")");
-                result.add(id);
+                if(deleteResult.equals("Metadata deleted")) result.add(id);
             }catch (Exception ignore){}
         }
         return Map.of("ids", result);
