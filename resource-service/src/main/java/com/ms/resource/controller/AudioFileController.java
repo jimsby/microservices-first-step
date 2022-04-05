@@ -27,6 +27,7 @@ public class AudioFileController {
 
     private S3BucketStorageService s3BucketStorageService;
     private AudioFileService audioFileService;
+    private RabbitController rabbitController;
 
     @PostMapping
     public ResponseCustomIdsDto uploadFile(@RequestParam(value = "file") MultipartFile file) {
@@ -39,7 +40,9 @@ public class AudioFileController {
                 s3BucketStorageService.uploadFile(tmpFile);
                 Integer id = audioFileService.createAudioFile(tmpFile.getName());
                 log.info("File created: " + tmpFile.getName() + " (id: " + id + ")");
-                return new ResponseCustomIdsDto(id);
+                ResponseCustomIdsDto response = new ResponseCustomIdsDto(id);
+                rabbitController.sendCreated(response);
+                return response;
             } else {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
@@ -89,6 +92,9 @@ public class AudioFileController {
                 result.add(id);
             }catch (Exception ignore){}
         }
-        return new ResponseCustomIdsDto(result);
+
+        ResponseCustomIdsDto response = new ResponseCustomIdsDto(result);
+        rabbitController.sendDeleted(response);
+        return response;
     }
 }
