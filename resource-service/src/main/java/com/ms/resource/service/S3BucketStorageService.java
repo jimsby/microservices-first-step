@@ -21,6 +21,7 @@ import java.io.IOException;
 import static com.ms.resource.util.FileUtil.convertMultiPartFileToFile;
 
 @Service
+@Slf4j
 public class S3BucketStorageService {
 
     @Autowired
@@ -29,13 +30,13 @@ public class S3BucketStorageService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    public String uploadFile(File file) {
+    public void uploadFile(File file) {
         try {
             amazonS3Client.putObject(new PutObjectRequest(bucketName, file.getName(), file));
         } catch (AmazonServiceException e) {
-            throw new IllegalStateException("Failed to upload the file", e);
+            log.error("S3 Failed to upload the file: " + file.getName());
+            throw new RuntimeException("Failed to upload the file", e);
         }
-        return "File uploaded : " + file.getName();
     }
 
     public byte[] downloadFile(String fileName) {
@@ -44,13 +45,13 @@ public class S3BucketStorageService {
             S3ObjectInputStream inputStream = s3Object.getObjectContent();
             return IOUtils.toByteArray(inputStream);
         } catch (IOException | AmazonServiceException e) {
-            throw new IllegalStateException("Failed to download the file", e);
+            log.error("S3 Failed to download the file: " + fileName);
+            throw new RuntimeException("Failed to download the file", e);
         }
     }
 
 
-    public String deleteFile(String fileName) {
+    public void deleteFile(String fileName) {
         amazonS3Client.deleteObject(bucketName, fileName);
-        return "File removed : " + fileName;
     }
 }

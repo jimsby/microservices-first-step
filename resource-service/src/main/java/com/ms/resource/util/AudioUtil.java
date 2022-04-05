@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class AudioUtil {
 
-    public static final String AUDIO_TYPE = "audio/mpeg";
+    private static final String AUDIO_TYPE = "audio/mpeg";
 
     /**
      * Return's boolean as equal type "audio/mpeg"

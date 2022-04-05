@@ -28,13 +28,13 @@ public class SongMetadataService {
         }
     }
 
-    public String delete(Integer id) {
+    public boolean delete(Integer id) {
         Optional<SongMetadata> metadata = songMetadataRepository.findById(id);
         if(metadata.isEmpty()) {
-            return "Id's not available";
+            return false;
         }else {
             songMetadataRepository.deleteById(id);
-            return "Metadata deleted";
+            return true;
         }
     }
 

@@ -1,10 +1,9 @@
 package com.ms.resource.controller;
 
+import com.ms.resource.dto.ResponseCustomIdsDto;
 import com.ms.resource.service.AudioFileService;
 import com.ms.resource.service.S3BucketStorageService;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.ms.resource.util.AudioUtil.isMp3;
 import static com.ms.resource.util.FileUtil.convertMultiPartFileToFile;
@@ -31,19 +29,21 @@ public class AudioFileController {
     private AudioFileService audioFileService;
 
     @PostMapping
-    @ResponseBody
-    public Map<String, Integer> uploadFile(@RequestParam(value = "file") MultipartFile file) {
+    public ResponseCustomIdsDto uploadFile(@RequestParam(value = "file") MultipartFile file) {
         File tmpFile = null;
+
         try {
             tmpFile = convertMultiPartFileToFile(file);
 
             if (isMp3(tmpFile)) {
-                String name = s3BucketStorageService.uploadFile(tmpFile);
+                s3BucketStorageService.uploadFile(tmpFile);
                 Integer id = audioFileService.createAudioFile(tmpFile.getName());
-                log.info(name + " (id: " + id + ") count: " + audioFileService.count());
-                return Map.of("id", id);
+                log.info("File created: " + tmpFile.getName() + " (id: " + id + ")");
+                return new ResponseCustomIdsDto(id);
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Validation error or request body is an invalid MP3");
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Validation error or request body is an invalid MP3");
             }
 
         } finally {
@@ -56,22 +56,27 @@ public class AudioFileController {
     @GetMapping("/{id}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer id) {
         String fileName = audioFileService.getAudioFile(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "File with Id: " + id + " Not Found")).getFileName();
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "File with Id: " + id + " Not Found")
+                )
+                .getFileName();
         byte[] data = s3BucketStorageService.downloadFile(fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
                 .ok()
                 .contentLength(data.length)
                 .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment; filename=\"" + "fileName" + "\"")
+                .header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
                 .body(resource);
     }
 
     @DeleteMapping
-    @ResponseBody
-    public ResponseTransfer deleteFile(@RequestParam List<Integer> ids) {
+    public ResponseCustomIdsDto deleteFile(@RequestParam List<Integer> ids) {
         if (ids.isEmpty() || ids.size() > 200) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Id's size must be 0 < id < 200");
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Id's size must be 0 < id < 200");
         }
 
         List<Integer> result = new ArrayList<>();
@@ -79,19 +84,11 @@ public class AudioFileController {
         for (Integer id : ids) {
             try {
                 String filename = audioFileService.delete(id);
-                String deleteResult = s3BucketStorageService.deleteFile(filename);
-                log.info(deleteResult + " (id: " + id + ")");
+                s3BucketStorageService.deleteFile(filename);
+                log.info("File deleted (id: " + id + ")");
                 result.add(id);
             }catch (Exception ignore){}
         }
-        return new ResponseTransfer(result);
+        return new ResponseCustomIdsDto(result);
     }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    private class ResponseTransfer {
-        private List<Integer> ids;
-    }
-
 }
