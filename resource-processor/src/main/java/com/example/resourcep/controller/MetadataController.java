@@ -27,13 +27,17 @@ public class MetadataController {
     public void createMetadata(ResponseCustomIdsDto dto){
         Integer id = dto.getId();
         Response response = resourceService.downloadFile(id);
-        File file = ResourceConverter.toFile(response);
-        Metadata metadata = metadataService.getMetadata(file);
-        file.delete();
-        SongMetadataDto sendSongDto = ResourceConverter.toMetadataDto(metadata, id);
-        ResponseCustomIdsDto responseSongId = songService.create(sendSongDto);
-        if(responseSongId.getId().equals(id)) {
-            log.info("Task completed. Song Service create Metadata (id: " + id + ")");
+        if(response.status() == 200) {
+            File file = ResourceConverter.toFile(response);
+            Metadata metadata = metadataService.getMetadata(file);
+            file.delete();
+            SongMetadataDto sendSongDto = ResourceConverter.toMetadataDto(metadata, id);
+            ResponseCustomIdsDto responseSongId = songService.create(sendSongDto);
+            if (responseSongId.getId().equals(id)) {
+                log.info("Task completed. Song Service create Metadata (id: " + id + ")");
+            }
+        }else {
+            log.warn("File not found from Song Service with given id: " + id);
         }
 
     }
