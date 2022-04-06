@@ -1,0 +1,9 @@
+service1:
+  base:
+    url: http://localhost:8081/resources/
+  name: resource-service
+
+service2:
+  base:
+    url: http://localhost:8082/songs/
+  name: song-service

@@ -1,4 +1,4 @@
-package com.ms.songs.dto;
+package com.example.resourcep.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

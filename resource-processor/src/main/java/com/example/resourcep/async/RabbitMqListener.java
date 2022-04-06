@@ -1,5 +1,6 @@
 package com.example.resourcep.async;
 
+import com.example.resourcep.controller.MetadataController;
 import com.example.resourcep.dto.ResponseCustomIdsDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,12 +15,14 @@ import org.springframework.stereotype.Component;
 public class RabbitMqListener {
 
     private final ObjectMapper objectMapper;
+    private final MetadataController controller;
 
     @RabbitListener(queues = "songs-created")
     public void listenCreate (String data){
         try {
             ResponseCustomIdsDto dto = objectMapper.readValue(data, ResponseCustomIdsDto.class);
             log.info("created objects: " + data);
+            controller.createMetadata(dto);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

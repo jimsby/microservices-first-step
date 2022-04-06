@@ -2,7 +2,7 @@ package com.ms.songs.controller;
 
 import com.ms.songs.dto.ResponseCustomIdsDto;
 import com.ms.songs.dto.SongMetadataDto;
-import com.ms.songs.serice.SongMetadataService;
+import com.ms.songs.service.SongMetadataService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/songs")
@@ -22,7 +21,7 @@ public class SongMetadataController {
     private SongMetadataService songMetadataService;
 
     @PostMapping
-    public Map<String, Integer> create(@RequestBody SongMetadataDto dto) {
+    public ResponseCustomIdsDto create(@RequestBody SongMetadataDto dto) {
         if (dto == null || dto.getResourceId() == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -30,7 +29,7 @@ public class SongMetadataController {
         } else {
             Integer id = songMetadataService.create(dto);
             log.info("Metadata created (id: " + id + ")");
-            return Map.of("id", id);
+            return new ResponseCustomIdsDto(id);
         }
     }
 

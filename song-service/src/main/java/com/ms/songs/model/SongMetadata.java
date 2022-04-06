@@ -21,7 +21,7 @@ public class SongMetadata {
 
     private String album;
 
-    private Integer length;
+    private Double length;
 
     private Integer year;
 }

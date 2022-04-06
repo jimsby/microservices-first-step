@@ -1,4 +1,4 @@
-package com.ms.songs.serice;
+package com.ms.songs.service;
 
 import com.ms.songs.dto.SongMetadataDto;
 import com.ms.songs.model.SongMetadata;
