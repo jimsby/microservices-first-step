@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 public class ResourceConverter {
@@ -47,8 +48,13 @@ public class ResourceConverter {
         dto.setName(meta.get("dc:title"));
         dto.setAlbum(meta.get("xmpDM:album"));
         dto.setArtist(meta.get("xmpDM:artist"));
-        dto.setYear(Integer.valueOf(meta.get("xmpDM:releaseDate")));
-        dto.setLength(Double.valueOf(meta.get("xmpDM:duration")));
+        try {
+            dto.setYear(Integer.valueOf(meta.get("xmpDM:releaseDate")));
+        } catch (RuntimeException ignore){}
+        try {
+            dto.setLength(Double.valueOf(meta.get("xmpDM:duration")));
+        } catch (RuntimeException ignore){}
+
         return dto;
     }
 }

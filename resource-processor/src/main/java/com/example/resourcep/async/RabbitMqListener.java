@@ -21,7 +21,7 @@ public class RabbitMqListener {
     public void listenCreate (String data){
         try {
             ResponseCustomIdsDto dto = objectMapper.readValue(data, ResponseCustomIdsDto.class);
-            log.info("created objects: " + data);
+            log.info("Received a task to create a metadata: " + data);
             controller.createMetadata(dto);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

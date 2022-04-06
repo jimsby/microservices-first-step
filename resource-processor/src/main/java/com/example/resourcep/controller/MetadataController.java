@@ -33,7 +33,7 @@ public class MetadataController {
         SongMetadataDto sendSongDto = ResourceConverter.toMetadataDto(metadata, id);
         ResponseCustomIdsDto responseSongId = songService.create(sendSongDto);
         if(responseSongId.getId().equals(id)) {
-            log.info("Song Service create Metadata (id: " + id + ")");
+            log.info("Task completed. Song Service create Metadata (id: " + id + ")");
         }
 
     }
