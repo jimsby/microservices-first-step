@@ -31,12 +31,13 @@ public class ProcessorService {
 
         try(FileInputStream inputStream = new FileInputStream(file)) {
             parser.parse(inputStream, handler, metadata, context);
-            if(tika.detect(file).equals(AUDIO_TYPE)) return metadata;
+            if(tika.detect(file).equals(AUDIO_TYPE)){
+                return metadata;
+            }
         } catch (IOException | SAXException | TikaException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return new Metadata();
     }
 
     public Metadata getMetadata(InputStream stream){
