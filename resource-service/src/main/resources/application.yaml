@@ -25,11 +25,10 @@ application:
 #RabbitMQ properties
 spring:
   rabbitmq:
-    listener:
-      simple:
-        retry:
-          enabled: true
-          initial-interval: 3s
-          max-attempts: 6
-          max-interval: 10s
-          multiplier: 2
+    template:
+      retry:
+        enabled: true
+        initial-interval: 3s
+        max-attempts: 6
+        max-interval: 10s
+        multiplier: 2
