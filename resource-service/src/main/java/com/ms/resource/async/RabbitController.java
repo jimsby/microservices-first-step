@@ -1,4 +1,4 @@
-package com.ms.resource.controller;
+package com.ms.resource.async;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

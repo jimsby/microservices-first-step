@@ -1,5 +1,6 @@
 package com.ms.resource.controller;
 
+import com.ms.resource.async.RabbitController;
 import com.ms.resource.dto.ResponseCustomIdsDto;
 import com.ms.resource.service.AudioFileService;
 import com.ms.resource.service.S3BucketStorageService;

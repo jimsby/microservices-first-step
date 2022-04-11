@@ -1,6 +1,5 @@
 package com.example.resourcep.util;
 
-import com.example.resourcep.dto.ResponseCustomIdsDto;
 import com.example.resourcep.dto.SongMetadataDto;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +9,7 @@ import org.apache.tika.metadata.Metadata;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 public class ResourceConverter {
