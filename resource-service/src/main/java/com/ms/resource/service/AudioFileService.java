@@ -2,14 +2,15 @@ package com.ms.resource.service;
 
 import com.ms.resource.model.AudioFile;
 import com.ms.resource.repository.AudioFileRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class AudioFileService {
-    @Autowired
+
     private AudioFileRepository audioFileRepository;
 
     public Integer createAudioFile(String name){
@@ -26,9 +27,5 @@ public class AudioFileService {
         String fileName = audioFileRepository.findById(id).get().getFileName();
         audioFileRepository.deleteById(id);
         return fileName;
-    }
-
-    public long count(){
-        return audioFileRepository.count();
     }
 }
