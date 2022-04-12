@@ -37,6 +37,11 @@ class S3BucketStorageServiceTest {
     @InjectMocks
     S3BucketStorageService service;
 
+    @BeforeEach
+    void setBucketName(){
+        ReflectionTestUtils.setField(service, "bucketName", bucketName);
+    }
+
     @Test
     void whenInitializingAWSS3Service_thenNotNull() {
         assertNotNull(s3);
@@ -45,11 +50,6 @@ class S3BucketStorageServiceTest {
     @Test
     void testFileAvailability(){
         System.out.println(mp3.length());
-    }
-
-    @BeforeEach
-    void setBucketName(){
-        ReflectionTestUtils.setField(service, "bucketName", bucketName);
     }
 
     @Test
