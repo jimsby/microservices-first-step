@@ -27,9 +27,6 @@ class RabbitMqListenerTest {
     @MockBean
     MetadataController controller;
 
-    @InjectMocks
-    RabbitMqListener listener;
-
     @Autowired
     RabbitTemplate rabbitTemplate;
 
