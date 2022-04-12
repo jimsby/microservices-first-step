@@ -1,16 +1,13 @@
 package com.example.resourcep.service;
 
-import com.example.resourcep.config.AppConfig;
 import org.apache.tika.metadata.Metadata;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class ProcessorServiceTest {

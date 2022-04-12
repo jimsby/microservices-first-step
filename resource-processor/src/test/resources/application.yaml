@@ -1,0 +1,9 @@
+service1:
+  base:
+    url: http://localhost:9561/resources/
+  name: resource-service
+
+service2:
+  base:
+    url: http://localhost:9561/songs/
+  name: song-service
