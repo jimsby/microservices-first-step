@@ -8,7 +8,6 @@ import org.apache.tika.metadata.Metadata;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 @Slf4j
@@ -24,15 +23,6 @@ public class ResourceConverter {
             File convertedFile = new File(Objects.requireNonNull(fileName));
             FileUtils.copyInputStreamToFile(response.body().asInputStream(), convertedFile);
             return convertedFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static InputStream toInputStream(Response response){
-        try {
-            return response.body().asInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }

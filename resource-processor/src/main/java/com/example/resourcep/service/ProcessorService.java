@@ -14,7 +14,6 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Component
 @Data
@@ -38,18 +37,5 @@ public class ProcessorService {
             e.printStackTrace();
         }
         return new Metadata();
-    }
-
-    public Metadata getMetadata(InputStream stream){
-        try {
-            parser.parse(stream, handler, metadata, context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (TikaException e) {
-            e.printStackTrace();
-        }
-        return metadata;
     }
 }
