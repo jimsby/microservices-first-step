@@ -17,10 +17,8 @@ cloud:
       secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     endpoint:
       uri: http://localhost:9444/s3
-
-application:
-  bucket:
-    name: testmp3bucket
+    s3:
+      bucket: testmp3bucket
 
 #RabbitMQ properties
 spring:
