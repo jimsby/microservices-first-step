@@ -27,12 +27,13 @@ public class AwsS3ClientConfig {
     public AmazonS3 s3client() {
 
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsId, awsKey);
-
+        System.out.println(endpoint);
         AwsClientBuilder.EndpointConfiguration config =
                 new AwsClientBuilder.EndpointConfiguration(endpoint, region);
 
         AmazonS3 amazonS3Client = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(config)
+                .withPathStyleAccessEnabled(true)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
 

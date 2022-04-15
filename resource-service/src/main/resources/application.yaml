@@ -16,7 +16,7 @@ cloud:
       accessKey: AKIAIOSFODNN7EXAMPLE
       secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
     endpoint:
-      uri: http://${AWS_S3:localhost}:9444/s3
+      uri: ${AWS_S3_ENDPOINT_URL:http://localhost:9444}
     s3:
       bucket: testmp3bucket
 

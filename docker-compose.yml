@@ -1,62 +1,44 @@
 version: "3.9"
 
-networks:
-  app-tier:
-    driver: bridge
-
 services:
   resource-processor:
     image: ms/resource-processor
-    container_name: ms_resource-processor
     restart: always
     build: ./resource-processor
     ports:
       - "8080:8080"
-    networks:
-      - app-tier
     depends_on:
       - rabbitmq
+      - resource-service
+      - song-service
     environment:
       RABBIT_HOST: rabbitmq
       RES_SERV_HOST: resource-service
       SONG_SERV_HOST: song-service
   resource-service:
     image: ms/resource-service
-    container_name: ms_resource-service
     restart: always
     build: ./resource-service
     ports:
       - "8081:8081"
-    networks:
-      - app-tier
     depends_on:
       - rabbitmq
       - s3-ninja
     environment:
       RABBIT_HOST: rabbitmq
-      AWS_S3: s3-ninja
+      AWS_S3_ENDPOINT_URL: 'http://s3-ninja:9000'
   song-service:
     image: ms/song-service
-    hostname: song-service
-    container_name: ms_song-service
     restart: always
     build: ./song-service
     ports:
       - "8082:8082"
-    networks:
-      - app-tier
   rabbitmq:
     image: 'rabbitmq:3.8.9-management'
-    hostname: rabbitmq
-    networks:
-      - app-tier
     ports:
       - "5672:5672"
       - "15672:15672"
   s3-ninja:
     image: 'scireum/s3-ninja:latest'
-    hostname: s3-ninja
-    networks:
-      - app-tier
     ports:
       - "9444:9000"
