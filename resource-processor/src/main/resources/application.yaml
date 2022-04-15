@@ -1,9 +1,14 @@
 service1:
   base:
-    url: http://localhost:8081/resources/
+    url: http://${RES_SERV_HOST:localhost}:8081/resources/
   name: resource-service
 
 service2:
   base:
-    url: http://localhost:8082/songs/
+    url: http://${SONG_SERV_HOST:localhost}:8082/songs/
   name: song-service
+
+#RabbitMQ properties
+spring:
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
