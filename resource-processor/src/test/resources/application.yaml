@@ -1,9 +1,17 @@
 service1:
-  base:
-    url: http://localhost:9561/resources/
-  name: resource-service
+  name: resourceservice
 
 service2:
-  base:
-    url: http://localhost:9561/songs/
-  name: song-service
+  name: songservice
+
+songservice:
+  ribbon:
+    listOfServers: http://localhost:9561
+
+resourceservice:
+  ribbon:
+    listOfServers: http://localhost:9561
+
+eureka:
+  client:
+    enabled: false

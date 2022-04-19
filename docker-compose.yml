@@ -14,8 +14,7 @@ services:
       - eureka
     environment:
       RABBIT_HOST: rabbitmq
-      RES_SERV_HOST: resource-service
-      SONG_SERV_HOST: song-service
+      EUREKA_SERVICE_URL: 'http://eureka:8761'
 
   resource-service:
     image: ms/resource-service
@@ -30,6 +29,7 @@ services:
     environment:
       RABBIT_HOST: rabbitmq
       AWS_S3_ENDPOINT_URL: 'http://s3-ninja:9000'
+      EUREKA_SERVICE_URL: 'http://eureka:8761'
 
   song-service:
     image: ms/song-service
@@ -39,6 +39,8 @@ services:
       - "8082:8082"
     depends_on:
       - eureka
+    environment:
+      EUREKA_SERVICE_URL: 'http://eureka:8761'
 
   rabbitmq:
     image: 'rabbitmq:3.8.9-management'
@@ -52,7 +54,8 @@ services:
       - "9444:9000"
 
   eureka:
-    image: springcloud/eureka
+    image: ms/eureka-server
+    build: ./eureka-server
     container_name: eureka
     ports:
       - "8761:8761"

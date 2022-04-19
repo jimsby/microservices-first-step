@@ -7,6 +7,13 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/*
+Ribbon is a client side load balancer which gives you a lot of
+control over the behaviour of HTTP and TCP clients. Feign already
+uses Ribbon, so if you are using @FeignClient then this section also applies.
+
+https://cloud.spring.io/spring-cloud-netflix/1.4.x/multi/multi_spring-cloud-ribbon.html
+ */
 @FeignClient("${service1.name}")
 public interface ResourceService {
 

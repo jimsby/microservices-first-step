@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +31,7 @@ class MetadataControllerTest {
     ObjectMapper mapper;
 
     @Test
+    @Disabled
     void createMetadata(WireMockRuntimeInfo wmRuntimeInfo) throws IOException {
         stubFor(get(urlMatching("/resources/1"))
                 .willReturn(aResponse().withStatus(200)
