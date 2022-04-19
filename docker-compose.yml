@@ -11,10 +11,12 @@ services:
       - rabbitmq
       - resource-service
       - song-service
+      - eureka
     environment:
       RABBIT_HOST: rabbitmq
       RES_SERV_HOST: resource-service
       SONG_SERV_HOST: song-service
+
   resource-service:
     image: ms/resource-service
     restart: always
@@ -24,21 +26,33 @@ services:
     depends_on:
       - rabbitmq
       - s3-ninja
+      - eureka
     environment:
       RABBIT_HOST: rabbitmq
       AWS_S3_ENDPOINT_URL: 'http://s3-ninja:9000'
+
   song-service:
     image: ms/song-service
     restart: always
     build: ./song-service
     ports:
       - "8082:8082"
+    depends_on:
+      - eureka
+
   rabbitmq:
     image: 'rabbitmq:3.8.9-management'
     ports:
       - "5672:5672"
       - "15672:15672"
+
   s3-ninja:
     image: 'scireum/s3-ninja:latest'
     ports:
       - "9444:9000"
+
+  eureka:
+    image: springcloud/eureka
+    container_name: eureka
+    ports:
+      - "8761:8761"

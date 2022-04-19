@@ -7,10 +7,10 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "${service2.name}", url = "${service2.base.url}")
+@FeignClient("${service2.name}")
 public interface SongService {
 
-    @PostMapping
+    @PostMapping("/songs")
     @Retryable(maxAttempts = 10,
             value = RuntimeException.class,
             backoff = @Backoff(delay = 500, multiplier = 2))

@@ -1,14 +1,19 @@
 service1:
-  base:
-    url: http://${RES_SERV_HOST:localhost}:8081/resources/
-  name: resource-service
+  name: resourceservice
 
 service2:
-  base:
-    url: http://${SONG_SERV_HOST:localhost}:8082/songs/
-  name: song-service
+  name: songservice
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
 
 #RabbitMQ properties
 spring:
+  application:
+    name: "resourceprocessor"
   rabbitmq:
     host: ${RABBIT_HOST:localhost}
