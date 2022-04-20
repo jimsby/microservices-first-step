@@ -1,8 +1,11 @@
 service1:
-  name: resourceservice
+  name: ${RESOURCE_SERVICE_NAME:resourceservice}
 
 service2:
-  name: songservice
+  name: ${SONG_SERVICE_NAME:songservice}
+
+gateway:
+  url: ${GATEWAY_URL:}
 
 eureka:
   client:

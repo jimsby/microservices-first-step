@@ -6,7 +6,7 @@ ADD ./src src/
 RUN mvn clean package
 
 FROM openjdk:17-alpine
-COPY --from=builder target/spring-cloud-gateway-0.0.1-SNAPSHOT.jar application.jar
+COPY --from=builder target/*.jar application.jar
 
 EXPOSE 8083
 

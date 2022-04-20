@@ -8,15 +8,31 @@ eureka:
 
 spring:
   application:
-    name: gateway-service
+    name: gatewayservice
   cloud:
     gateway:
       routes:
-        - id: employeeModule
-          uri: lb://FIRST-SERVICE
+        - id: resourceService
+          uri: lb://RESOURCESERVICE
           predicates:
-            - Path=/employee/**
-        - id: consumerModule
-          uri: lb://SECOND-SERVICE
+            - Path=/resources/**
+        - id: songService
+          uri: lb://SONGSERVICE
           predicates:
-            - Path=/consumer/**
+            - Path=/songs/**
+        - id: eurekaServer
+          uri: lb://EUREKASERVER
+          predicates:
+            - Path=/eureka/**
+        - id: rabbit
+          uri: ${RABBIT_HOST:http://localhost:15672}
+          predicates:
+            - Path=/rabbit/**
+          filters:
+            - RewritePath=/rabbit/(?<segment>.*),/$\{segment}
+        - id: s3ninja
+          uri: ${S3NINJA_HOST:http://localhost:9444}
+          predicates:
+            - Path=/s3/**
+          filters:
+            - RewritePath=/s3/(?<segment>.*),/$\{segment}

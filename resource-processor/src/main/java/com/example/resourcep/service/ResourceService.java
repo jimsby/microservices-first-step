@@ -14,7 +14,7 @@ uses Ribbon, so if you are using @FeignClient then this section also applies.
 
 https://cloud.spring.io/spring-cloud-netflix/1.4.x/multi/multi_spring-cloud-ribbon.html
  */
-@FeignClient("${service1.name}")
+@FeignClient(name = "${service1.name}", url = "${gateway.url}")
 public interface ResourceService {
 
     @GetMapping("/resources/{id}")

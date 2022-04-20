@@ -4,6 +4,9 @@ service1:
 service2:
   name: songservice
 
+gateway:
+  url:
+
 songservice:
   ribbon:
     listOfServers: http://localhost:9561
