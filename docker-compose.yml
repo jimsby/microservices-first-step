@@ -37,6 +37,15 @@ services:
     environment:
       EUREKA_SERVICE_URL: 'http://eureka:8761'
 
+  storage-service:
+    image: ms/storage-service
+    restart: always
+    build: ./storage-service
+    depends_on:
+      - eureka
+    environment:
+      EUREKA_SERVICE_URL: 'http://eureka:8761'
+
   rabbitmq:
     image: 'rabbitmq:3.8.9-management'
     ports:
