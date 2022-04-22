@@ -28,18 +28,20 @@ class AudioFileServiceTest {
     @BeforeEach
     void setMockOutput() {
         String fileName = "file_example_MP3_700KB.mp3";
-        AudioFile testFile1 = new AudioFile(1, fileName);
+        AudioFile testFile1 = new AudioFile(1, fileName, 1);
         lenient().when(audioFileRepository.findByFileName(fileName))
                 .thenReturn(Optional.of(testFile1));
-        lenient().when(audioFileRepository.save(new AudioFile(fileName)))
+        lenient().when(audioFileRepository.save(new AudioFile(fileName, 1)))
                 .thenReturn(testFile1);
+        lenient().when(audioFileRepository.findById(1))
+                .thenReturn(Optional.of(testFile1));
         lenient().when(audioFileRepository.findById(1))
                 .thenReturn(Optional.of(testFile1));
     }
 
     @Test
     void createAudioFile() {
-        assertEquals(audioFileService.createAudioFile("file_example_MP3_700KB.mp3"), 1);
+        assertEquals(audioFileService.createAudioFile("file_example_MP3_700KB.mp3", 1), 1);
     }
 
     @Test

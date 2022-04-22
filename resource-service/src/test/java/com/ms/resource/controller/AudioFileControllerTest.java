@@ -3,19 +3,28 @@ package com.ms.resource.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms.resource.config.RabbitMockConfig;
 import com.ms.resource.config.S3MockConfig;
+import com.ms.resource.config.StorageServiceConfig;
 import com.ms.resource.dto.ResponseCustomIdsDto;
+import com.ms.resource.dto.StorageDto;
 import com.ms.resource.model.AudioFile;
 import com.ms.resource.repository.AudioFileRepository;
 import com.ms.resource.service.S3BucketStorageService;
+import com.ms.resource.service.StorageService;
+import com.ms.resource.service.StorageServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,11 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-integrationtest.yaml")
 @AutoConfigureMockMvc
-@Import({S3MockConfig.class, RabbitMockConfig.class})
+@Import({S3MockConfig.class, RabbitMockConfig.class, StorageServiceConfig.class})
 class AudioFileControllerTest {
 
     private static File mp3 = new File("src/test/resources/file_example_MP3_700KB.mp3");
-
+    private static StorageDto stagingStorage = new StorageDto(1, "STAGING", "testmp3bucket");
+    private static StorageDto permanentStorage = new StorageDto(2, "PERMANENT", "permanentbucket");
     @Autowired
     private MockMvc mvc;
 
@@ -46,11 +56,13 @@ class AudioFileControllerTest {
     @Autowired
     S3BucketStorageService s3BucketStorageService;
 
+
+
     @BeforeEach
     void setUp(){
-        repository.save(new AudioFile(1, mp3.getName()));
-        repository.save(new AudioFile(2, "2_" + mp3.getName()));
-        s3BucketStorageService.uploadFile(mp3);
+        repository.save(new AudioFile(1, mp3.getName(), 1));
+        repository.save(new AudioFile(2, "2_" + mp3.getName(), 1));
+        s3BucketStorageService.uploadFile(mp3, stagingStorage);
     }
 
     @Test

@@ -13,9 +13,9 @@ public class AudioFileService {
 
     private AudioFileRepository audioFileRepository;
 
-    public Integer createAudioFile(String name){
+    public Integer createAudioFile(String name, Integer storageId){
         AudioFile audioFile = audioFileRepository.findByFileName(name)
-                .orElseGet(() -> audioFileRepository.save(new AudioFile(name)));
+                .orElseGet(() -> audioFileRepository.save(new AudioFile(name, storageId)));
         return audioFile.getId();
     }
 
@@ -23,9 +23,17 @@ public class AudioFileService {
         return audioFileRepository.findById(id);
     }
 
-    public String delete(Integer id){
-        String fileName = audioFileRepository.findById(id).get().getFileName();
+    public AudioFile delete(Integer id){
+        AudioFile file = audioFileRepository.findById(id).get();
         audioFileRepository.deleteById(id);
-        return fileName;
+        return file;
+    }
+
+    public boolean fileNotExists(String name) {
+        return audioFileRepository.findByFileName(name).isEmpty();
+    }
+
+    public Integer getIdByName(String name){
+        return audioFileRepository.findByFileName(name).get().getId();
     }
 }

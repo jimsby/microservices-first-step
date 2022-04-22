@@ -21,7 +21,11 @@ public class AudioFile {
     @Column(name = "FILE_NAME")
     private String fileName;
 
-    public AudioFile(String fileName) {
+    @Column(name = "STORAGE_ID")
+    private Integer storageId;
+
+    public AudioFile(String fileName, Integer storageId) {
         this.fileName = fileName;
+        this.storageId = storageId;
     }
 }

@@ -2,8 +2,11 @@ package com.ms.resource.controller;
 
 import com.ms.resource.async.RabbitController;
 import com.ms.resource.dto.ResponseCustomIdsDto;
+import com.ms.resource.dto.StorageDto;
+import com.ms.resource.model.AudioFile;
 import com.ms.resource.service.AudioFileService;
 import com.ms.resource.service.S3BucketStorageService;
+import com.ms.resource.service.StorageServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,24 +34,32 @@ public class AudioFileController {
     private AudioFileService audioFileService;
     private RabbitController rabbitController;
 
+    private StorageServiceImpl storageService;
+
     @PostMapping
     public ResponseCustomIdsDto uploadFile(@RequestParam(value = "file") MultipartFile file) {
         File tmpFile = null;
 
         try {
-            tmpFile = convertMultiPartFileToFile(file);
+            if(audioFileService.fileNotExists(file.getName())) {
 
-            if (isMp3(tmpFile)) {
-                s3BucketStorageService.uploadFile(tmpFile);
-                Integer id = audioFileService.createAudioFile(tmpFile.getName());
-                log.info("File created: " + tmpFile.getName() + " (id: " + id + ")");
-                ResponseCustomIdsDto response = new ResponseCustomIdsDto(id);
-                rabbitController.sendCreated(response);
-                return response;
-            } else {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Validation error or request body is an invalid MP3");
+
+                tmpFile = convertMultiPartFileToFile(file);
+                if (isMp3(tmpFile)) {
+                    StorageDto storageStaging = storageService.getRandomStaging();
+                    s3BucketStorageService.uploadFile(tmpFile, storageStaging);
+                    Integer id = audioFileService.createAudioFile(tmpFile.getName(), storageStaging.getStorageId());
+                    log.info("File created: {}  (id: {} | {} | bucketId: {})", tmpFile.getName(), id, storageStaging.getStorageType(), storageStaging.getStorageId());
+                    ResponseCustomIdsDto response = new ResponseCustomIdsDto(id);
+                    rabbitController.sendCreated(response);
+                    return response;
+                } else {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Validation error or request body is an invalid MP3");
+                }
+            }else {
+                return new ResponseCustomIdsDto(audioFileService.getIdByName(file.getName()));
             }
 
         } finally {
@@ -60,13 +71,14 @@ public class AudioFileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer id) {
-        String fileName = audioFileService.getAudioFile(id)
+        AudioFile audioFile = audioFileService.getAudioFile(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "File with Id: " + id + " Not Found")
-                )
-                .getFileName();
-        byte[] data = s3BucketStorageService.downloadFile(fileName);
+                );
+        String fileName = audioFile.getFileName();
+        StorageDto storage = storageService.getStorage(audioFile.getStorageId());
+        byte[] data = s3BucketStorageService.downloadFile(fileName, storage);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
                 .ok()
@@ -88,8 +100,9 @@ public class AudioFileController {
 
         for (Integer id : ids) {
             try {
-                String filename = audioFileService.delete(id);
-                s3BucketStorageService.deleteFile(filename);
+                AudioFile file = audioFileService.delete(id);
+                StorageDto storageDto = storageService.getStorage(file.getStorageId());
+                s3BucketStorageService.deleteFile(file.getFileName(), storageDto);
                 log.info("File deleted (id: " + id + ")");
                 result.add(id);
             }catch (Exception ignore){}

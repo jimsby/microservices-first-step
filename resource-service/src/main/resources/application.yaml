@@ -38,3 +38,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
+
+storageservice:
+  name: ${STORAGE_SERVICE_NAME:storageservice}
+
+gateway:
+  url: ${GATEWAY_URL:http://localhost:8083/}
