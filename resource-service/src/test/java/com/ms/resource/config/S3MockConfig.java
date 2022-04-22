@@ -5,14 +5,10 @@ import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.ms.resource.dto.StorageDto;
-import com.ms.resource.service.StorageService;
 import io.findify.s3mock.S3Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-
-import java.util.List;
 
 public class S3MockConfig {
     @Value("${cloud.aws.region.static}")

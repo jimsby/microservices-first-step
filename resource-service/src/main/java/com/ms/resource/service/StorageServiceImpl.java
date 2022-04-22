@@ -43,6 +43,10 @@ public class StorageServiceImpl {
         return dto.getStorageType().equalsIgnoreCase("Staging");
     }
 
+    public boolean isStagingStage(StorageDto dto){
+        return dto.getStorageType().equalsIgnoreCase("Staging");
+    }
+
     public StorageDto getStorage(Integer storageId) {
         List<StorageDto> list = service.getStoragesList();
         StorageDto dto = list.stream()

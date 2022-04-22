@@ -27,6 +27,7 @@ services:
       RABBIT_HOST: rabbitmq
       AWS_S3_ENDPOINT_URL: 'http://s3-ninja:9000'
       EUREKA_SERVICE_URL: 'http://eureka:8761'
+      GATEWAY_URL: 'http://spring-cloud-gateway:8083'
 
   song-service:
     image: ms/song-service

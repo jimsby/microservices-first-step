@@ -40,10 +40,8 @@ public class AudioFileController {
     public ResponseCustomIdsDto uploadFile(@RequestParam(value = "file") MultipartFile file) {
         File tmpFile = null;
 
-        try {
-            if(audioFileService.fileNotExists(file.getName())) {
-
-
+        if (audioFileService.fileNotExists(file.getOriginalFilename())) {
+            try {
                 tmpFile = convertMultiPartFileToFile(file);
                 if (isMp3(tmpFile)) {
                     StorageDto storageStaging = storageService.getRandomStaging();
@@ -57,15 +55,15 @@ public class AudioFileController {
                     throw new ResponseStatusException(
                             HttpStatus.BAD_REQUEST,
                             "Validation error or request body is an invalid MP3");
+
                 }
-            }else {
-                return new ResponseCustomIdsDto(audioFileService.getIdByName(file.getName()));
+            } finally {
+                tmpFile.delete();
             }
 
-        } finally {
-            tmpFile.delete();
+        } else {
+            return new ResponseCustomIdsDto(audioFileService.getIdByName(file.getOriginalFilename()));
         }
-
 
     }
 
@@ -105,11 +103,34 @@ public class AudioFileController {
                 s3BucketStorageService.deleteFile(file.getFileName(), storageDto);
                 log.info("File deleted (id: " + id + ")");
                 result.add(id);
-            }catch (Exception ignore){}
+            } catch (Exception ignore) {
+            }
         }
 
         ResponseCustomIdsDto response = new ResponseCustomIdsDto(result);
         rabbitController.sendDeleted(response);
         return response;
+    }
+
+    @PostMapping("/{id}")
+    public ResponseCustomIdsDto moveFileToPermanent(@PathVariable Integer id) {
+        AudioFile audioFile = audioFileService.getAudioFile(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "File with Id: " + id + " Not Found")
+                );
+        StorageDto source = storageService.getStorage(audioFile.getStorageId());
+        if (storageService.isStagingStage(source)) {
+            StorageDto destination = storageService.getRandomPermanent();
+            s3BucketStorageService.moveToPermanent(audioFile, source, destination);
+            audioFileService.setNewStorage(audioFile, destination);
+            log.info("File {} moved (id: {}) to PERMANENT STORAGE (id: {})",
+                    audioFile.getFileName(), audioFile.getId(), audioFile.getStorageId());
+            return new ResponseCustomIdsDto(id);
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "File with Id: " + id + " is Already in Permanent Storage");
+        }
     }
 }

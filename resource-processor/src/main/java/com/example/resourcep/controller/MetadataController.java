@@ -33,6 +33,7 @@ public class MetadataController {
             file.delete();
             SongMetadataDto sendSongDto = ResourceConverter.toMetadataDto(metadata, id);
             ResponseCustomIdsDto responseSongId = songService.create(sendSongDto);
+            resourceService.moveFileToPermanent(id);
             if (responseSongId.getId().equals(id)) {
                 log.info("Task completed. Song Service create Metadata (id: " + id + ")");
             }

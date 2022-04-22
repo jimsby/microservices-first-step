@@ -41,13 +41,3 @@ spring:
           uri: lb://EUREKASERVER
           predicates:
             - Path=/eureka/**
-        - id: rabbit
-          uri: ${RABBIT_HOST:http://localhost:15672}
-          predicates:
-            - Path=/rabbit/**
-          filters:
-            - RewritePath=/rabbit/(?<segment>.*),/$\{segment}
-        - id: s3ninja
-          uri: ${S3NINJA_HOST:http://localhost:9444}
-          predicates:
-            - Path=/ui/**

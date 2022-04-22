@@ -4,7 +4,6 @@ import com.ms.resource.dto.StorageDto;
 import com.ms.resource.service.StorageService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

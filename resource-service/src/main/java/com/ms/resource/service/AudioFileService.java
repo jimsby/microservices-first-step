@@ -1,5 +1,6 @@
 package com.ms.resource.service;
 
+import com.ms.resource.dto.StorageDto;
 import com.ms.resource.model.AudioFile;
 import com.ms.resource.repository.AudioFileRepository;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,11 @@ public class AudioFileService {
 
     public Integer getIdByName(String name){
         return audioFileRepository.findByFileName(name).get().getId();
+    }
+
+    public void setNewStorage(AudioFile audioFile, StorageDto after) {
+        AudioFile file = audioFileRepository.findById(audioFile.getId()).get();
+        file.setStorageId(after.getStorageId());
+        audioFileRepository.save(file);
     }
 }

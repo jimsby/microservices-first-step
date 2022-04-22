@@ -5,7 +5,7 @@ service2:
   name: ${SONG_SERVICE_NAME:songservice}
 
 gateway:
-  url: ${GATEWAY_URL:}
+  url: ${GATEWAY_URL:localhost:8083}
 
 eureka:
   client:
