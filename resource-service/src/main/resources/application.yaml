@@ -5,6 +5,17 @@ server:
     include-message: always
     include-binding-errors: always
 
+#Circuit Breaker
+resilience4j.circuitbreaker:
+  instances:
+    backendA:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 10
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 60
+      eventConsumerBufferSize: 10
+      registerHealthIndicator: true
+
 #AWS properties
 cloud:
   aws:
