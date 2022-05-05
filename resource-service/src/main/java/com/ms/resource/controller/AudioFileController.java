@@ -13,10 +13,12 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class AudioFileController {
     private StorageServiceImpl storageService;
 
     @PostMapping
+    @RolesAllowed("ADMIN")
     public ResponseCustomIdsDto uploadFile(@RequestParam(value = "file") MultipartFile file) {
         File tmpFile = null;
 
@@ -68,6 +71,7 @@ public class AudioFileController {
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({ "USER", "ADMIN" })
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer id) {
         AudioFile audioFile = audioFileService.getAudioFile(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -87,6 +91,7 @@ public class AudioFileController {
     }
 
     @DeleteMapping
+    @RolesAllowed("ADMIN")
     public ResponseCustomIdsDto deleteFile(@RequestParam List<Integer> ids) {
         if (ids.isEmpty() || ids.size() > 200) {
             throw new ResponseStatusException(
@@ -113,6 +118,7 @@ public class AudioFileController {
     }
 
     @PostMapping("/{id}")
+    @RolesAllowed("ADMIN")
     public ResponseCustomIdsDto moveFileToPermanent(@PathVariable Integer id) {
         AudioFile audioFile = audioFileService.getAudioFile(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -132,5 +138,11 @@ public class AudioFileController {
                     HttpStatus.BAD_REQUEST,
                     "File with Id: " + id + " is Already in Permanent Storage");
         }
+    }
+
+    @GetMapping("/admin")
+    @RolesAllowed("ADMIN")
+    public String adminInfo(){
+        return "Admin login";
     }
 }

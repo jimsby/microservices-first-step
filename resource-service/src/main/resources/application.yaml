@@ -33,6 +33,8 @@ cloud:
 
 #RabbitMQ properties
 spring:
+  main:
+    allow-circular-references: true
   application:
     name: "resourceservice"
   rabbitmq:
@@ -44,6 +46,17 @@ spring:
         max-attempts: 6
         max-interval: 10s
         multiplier: 2
+
+#Keycloak
+keycloak:
+  auth-server-url: http://localhost:9000
+  realm: ms
+  resource: oauth-server
+  ssl-required: external
+  use-resource-role-mappings: true
+  autodetect-bearer-only: true
+  credentials:
+    secret: N7eYRvxgRCyIi5f548drL92QXqgoVaBl
 
 eureka:
   client:
