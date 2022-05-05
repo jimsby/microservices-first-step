@@ -49,14 +49,14 @@ spring:
 
 #Keycloak
 keycloak:
-  auth-server-url: http://localhost:9000
+  auth-server-url: ${KEYCLOAK_URL:http://localhost:9000}
   realm: ms
   resource: oauth-server
   ssl-required: external
   use-resource-role-mappings: true
   autodetect-bearer-only: true
   credentials:
-    secret: N7eYRvxgRCyIi5f548drL92QXqgoVaBl
+    secret: ${KEYCLOAK_SECRET:EZuI7C1RT0Nnoh1cP9NlY9jDtXm1cYVH}
 
 eureka:
   client:

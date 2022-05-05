@@ -41,3 +41,7 @@ spring:
           uri: lb://EUREKASERVER
           predicates:
             - Path=/eureka/**
+        - id: keycloak
+          uri: http://keycloak:8080
+          predicates:
+            - Path=/realms/**

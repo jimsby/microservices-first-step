@@ -1,4 +1,6 @@
 spring:
+  autoconfigure:
+    exclude: org.keycloak.adapters.springboot.KeycloakAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   datasource:
     url: jdbc:h2:mem:test
   jpa:
@@ -7,3 +9,5 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: true
+keycloak:
+  enabled: false
