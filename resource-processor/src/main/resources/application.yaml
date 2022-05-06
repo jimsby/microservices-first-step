@@ -20,3 +20,16 @@ spring:
     name: "resourceprocessor"
   rabbitmq:
     host: ${RABBIT_HOST:localhost}
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: oauth-server
+            client-secret: EZuI7C1RT0Nnoh1cP9NlY9jDtXm1cYVH
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            authorization-uri: ${SECURITY_HOST:http://localhost:8083}/realms/${YOUR_REALM:ms}/protocol/openid-connect/authorize
+            token-uri: ${SECURITY_HOST:http://localhost:8083}/realms/${YOUR_REALM:ms}/protocol/openid-connect/token

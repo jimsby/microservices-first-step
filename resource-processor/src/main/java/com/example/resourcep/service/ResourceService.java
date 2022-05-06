@@ -1,6 +1,7 @@
 package com.example.resourcep.service;
 
 import com.example.resourcep.dto.ResponseCustomIdsDto;
+import com.example.resourcep.oauth.AuthConfiguration;
 import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.retry.annotation.Backoff;
@@ -16,7 +17,7 @@ uses Ribbon, so if you are using @FeignClient then this section also applies.
 
 https://cloud.spring.io/spring-cloud-netflix/1.4.x/multi/multi_spring-cloud-ribbon.html
  */
-@FeignClient(name = "${service1.name}", url = "${gateway.url}")
+@FeignClient(name = "${service1.name}", url = "${gateway.url}", configuration = AuthConfiguration.class)
 public interface ResourceService {
 
     @GetMapping("/resources/{id}")
