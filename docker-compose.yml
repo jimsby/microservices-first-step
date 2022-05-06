@@ -13,6 +13,7 @@ services:
       RABBIT_HOST: rabbitmq
       EUREKA_SERVICE_URL: 'http://eureka:8761'
       GATEWAY_URL: 'http://spring-cloud-gateway:8083'
+      SECURITY_HOST: 'http://keycloak:8080'
     logging:
       driver: "elastic/elastic-logging-plugin:7.10.0"
       options:

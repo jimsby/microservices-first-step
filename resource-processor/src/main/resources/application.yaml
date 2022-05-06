@@ -27,7 +27,7 @@ spring:
           keycloak:
             provider: keycloak
             client-id: oauth-server
-            client-secret: EZuI7C1RT0Nnoh1cP9NlY9jDtXm1cYVH
+            client-secret: ${KEYCLOAK_SECRET:EZuI7C1RT0Nnoh1cP9NlY9jDtXm1cYVH}
             authorization-grant-type: client_credentials
         provider:
           keycloak:
